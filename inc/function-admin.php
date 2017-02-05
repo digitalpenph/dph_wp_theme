@@ -9,7 +9,95 @@
 
 function digipen_add_admin_page(){
 
-	add_menu_page( 'DigitalpenPH Theme Options', 'Digipen', 'manage_options', 'mark-digipen', 'digipen_theme_create_page', '', 110 );
+	//Generate admin page
+	add_menu_page( 'DigitalpenPH Theme Options', 'Digipen', 'manage_options', 'mark_digipen', 'digipen_theme_create_page','dashicons-welcome-write-blog', 110 );
+
+	//Generate admin sub page
+	add_submenu_page('mark_digipen','Digipen General','General','manage_options','mark_digipen','digipen_theme_create_page');
+
+	add_submenu_page('mark_digipen','Digipen CSS Options','Custom CSS','manage_options','mark_digipen_css','digipen_theme_settings_page');
+
+	//Activate Custom Settings
+	add_action('admin_init', 'digipen_custom_settings');
+}
+
+add_action('admin_menu', 'digipen_add_admin_page');
+
+function digipen_custom_settings(){
+	register_setting('digipen-settings-group','profile_picture');
+	register_setting('digipen-settings-group','first_name');
+	register_setting('digipen-settings-group','last_name');
+	register_setting('digipen-settings-group','description');
+	register_setting('digipen-settings-group','twitter', 'digipen_sanitize_twitter_handler');
+	register_setting('digipen-settings-group','facebook');
+	register_setting('digipen-settings-group','googleplus');
+
+	add_settings_section('digipen-sidebar-options','Sidebar Options','digipen_sidebar_options','mark_digipen');
+
+	add_settings_field('sidebar-profile-picture','Picture','digipen_sidebar_profile','mark_digipen','digipen-sidebar-options');
+	add_settings_field('sidebar-name','Full Name','digipen_sidebar_name','mark_digipen','digipen-sidebar-options');
+	add_settings_field('sidebar-description','Description','digipen_sidebar_description','mark_digipen','digipen-sidebar-options');
+	add_settings_field('sidebar-twitter','Twitter handler','digipen_sidebar_twitter','mark_digipen','digipen-sidebar-options');
+	add_settings_field('sidebar-facebook','Facebook handler','digipen_sidebar_facebook','mark_digipen','digipen-sidebar-options');
+	add_settings_field('sidebar-googleplus','Google Plus handler','digipen_sidebar_googleplus','mark_digipen','digipen-sidebar-options');
+
+	register_setting('digipen-theme-support', 'post_formats', 'digipen_post_formats_callback');
+
+	//add_settings_section('digipen-theme-options', 'Theme Options', 'digipen_theme_options');
+}
+
+//Post Formats Callback Function
+/*function digipen_post_formats_callback( $input ){
+	return $input;
+}*/
+
+
+function digipen_sidebar_options(){
+	echo 'Customize your sidebar';
+}
+
+function digipen_sidebar_profile(){
+	$picture = esc_attr( get_option('profile_picture') );
+	echo '<input type="button" class="button button-secondary" value="Upload Profile Picture" id="upload-button"/><input type="hidden" id="profile-picture" name="profile_picture"/>';
+}
+
+function digipen_sidebar_name(){
+	$firstname = esc_attr( get_option('first_name') );
+	$lastname = esc_attr( get_option('last_name') );
+	echo '<input type="text" name="first_name" value="'.$firstname.'" placeholder="First Name"/><input type="text" name="last_name" value="'.$lastname.'" placeholder="First Name"/>';
+}
+
+function digipen_sidebar_description(){
+	$description = esc_attr( get_option('description') );
+	echo '<textarea name="description">'.$description.'</textarea>';
+}
+
+function digipen_sidebar_twitter(){
+	$twitter = esc_attr( get_option('twitter') );
+	echo '<input type="text" name="twitter" value="'.$twitter.'" placeholder="Twitter"/><p class="description">Input something new</p>';
+}
+
+function digipen_sidebar_facebook(){
+	$facebook = esc_attr( get_option('facebook') );
+	echo '<input type="text" name="facebook" value="'.$facebook.'" placeholder="Facebook"/>';
+}
+
+function digipen_sidebar_googleplus(){
+	$googleplus = esc_attr( get_option('googleplus') );
+	echo '<input type="text" name="googleplus" value="'.$googleplus.'" placeholder="Google Plus"/>';
+}
+
+function digipen_sanitize_twitter_handler($input){
+	$output = sanitize_text_field( $input );
+	$output = str_replace('@', '', $output);
+	return $output;
+}
+
+function digipen_theme_create_page(){
+	//generation of admin page
+	require_once(get_template_directory() . '/inc/templates/digipen-admin.php');
+}
+
+function digipen_theme_settings_page(){
 
 }
-add_action();

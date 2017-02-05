@@ -1,0 +1,17 @@
+/*
+@package digipentheme
+*/
+
+.digipen-general-form,
+.digipen-sidebar-preview { display: inline-blog; float: left; }
+
+.digipen-sidebar-preview { width: 200px; background-color: #1F1F1F; padding: 20px; text-align: center; margin-right: 20px; }
+.digipen-sidebar { display: block; text-align: center; }
+h1.digipen-username,
+h2.digipen-description { font-weight: 100; color: #fff; }
+h1.digipen-username { font-size: 13px; margin: 0 0 10px; }
+h2.digipen-description { font-size: 13px; margin: 0 0 20px; }
+
+.image-container { display: block; width: 100%; overflow: hidden; text-align: center; }
+.profile-picture { width: 122px; height: 122px; overflow: hidden; border-radius: 50%; margin: 20px auto; 
+	background-position: center; background-repeat: no-repeat; background-size: cover; }

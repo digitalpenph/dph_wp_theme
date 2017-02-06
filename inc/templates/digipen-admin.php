@@ -18,8 +18,8 @@
 		</div>
 	</div>
 </div>
-<form method="post" action="options.php" class="digipen-general-form">
+<form id="submitForm" method="post" action="options.php" class="digipen-general-form">
 	<?php settings_fields('digipen-settings-group'); ?>
 	<?php do_settings_sections('mark_digipen'); ?>
-	<?php submit_button(); ?>
+	<?php submit_button('Save Changes', 'primary', 'btnSubmit'); ?>
 </form>

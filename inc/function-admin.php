@@ -13,7 +13,9 @@ function digipen_add_admin_page(){
 	add_menu_page( 'DigitalpenPH Theme Options', 'Digipen', 'manage_options', 'mark_digipen', 'digipen_theme_create_page','dashicons-welcome-write-blog', 110 );
 
 	//Generate admin sub page
-	add_submenu_page('mark_digipen','Digipen General','General','manage_options','mark_digipen','digipen_theme_create_page');
+	add_submenu_page('mark_digipen','Digipen Sidebar','Sidebar','manage_options','mark_digipen','digipen_theme_create_page');
+
+	add_submenu_page('mark_digipen','Digipen Theme Options','Theme Options','manage_options','mark_digipen_theme','digipen_theme_support_page');
 
 	add_submenu_page('mark_digipen','Digipen CSS Options','Custom CSS','manage_options','mark_digipen_css','digipen_theme_settings_page');
 
@@ -43,22 +45,46 @@ function digipen_custom_settings(){
 
 	register_setting('digipen-theme-support', 'post_formats', 'digipen_post_formats_callback');
 
-	//add_settings_section('digipen-theme-options', 'Theme Options', 'digipen_theme_options');
+	add_settings_section('digipen-theme-options', 'Theme Options', 'digipen_theme_options', 'mark_digipen_theme');
+
+	add_settings_field('post-formats', 'Post Formats', 'digipen_post_formats', 'mark_digipen_theme', 'digipen-theme-options');
 }
 
 //Post Formats Callback Function
-/*function digipen_post_formats_callback( $input ){
+function digipen_post_formats_callback( $input ){
 	return $input;
-}*/
+}
 
+function digipen_theme_options(){
+	echo 'Activate and Deactivate specific Theme Support Options';
+}
 
+function digipen_post_formats(){
+	$options = get_option('post_formats');
+	$formats = array('aside', 'gallery', 'link', 'images', 'quote', 'status', 'video', 'audio', 'chat');
+	$output = '';
+	foreach ($formats as  $format) {
+		$checked = ( @$options[$format] == 1 ? 'checked' : '' );
+		$output .= '<label><input type="checkbox" id="'.$format.'" name="post_formats['.$format.']" value="1" '.$checked.'> '.$format.'</label><br>';
+	}
+	echo $output;
+}
+
+// Sidebar Options Fucntions
 function digipen_sidebar_options(){
 	echo 'Customize your sidebar';
 }
 
 function digipen_sidebar_profile(){
 	$picture = esc_attr( get_option('profile_picture') );
-	echo '<input type="button" class="button button-secondary" value="Upload Profile Picture" id="upload-button"/><input type="hidden" id="profile-picture" name="profile_picture"/>';
+	if(empty($picture)){
+		echo '<input type="button" class="button button-secondary" value="Upload Profile Picture" id="upload-button"/>
+		<input type="hidden" id="profile-picture" name="profile_picture" value=""/>';
+	} else {
+		echo '<input type="button" class="button button-secondary" value="Replace" id="upload-button"/>
+		<input type="hidden" id="profile-picture" name="profile_picture" value="'.$picture.'"/>
+		<input type="button" class="button button-secondary" value="Remove" id="remove-picture"/>';
+	}
 }
 
 function digipen_sidebar_name(){
@@ -93,9 +119,14 @@ function digipen_sanitize_twitter_handler($input){
 	return $output;
 }
 
+//Template submenu functions
 function digipen_theme_create_page(){
 	//generation of admin page
 	require_once(get_template_directory() . '/inc/templates/digipen-admin.php');
+}
+
+function digipen_theme_support_page(){
+	require_once(get_template_directory() . '/inc/templates/digipen-theme-support.php');
 }
 
 function digipen_theme_settings_page(){

@@ -25,4 +25,14 @@ jQuery(document).ready(function($){
 		mediaUploader.open();
 
 	});
+
+	$('#remove-picture').on('click', function(e){
+		e.preventDefault();
+		var answer = confirm('Do you want to remove it?');
+		if(answer == true){
+			$('#profile-picture').val("");
+			$('.digipen-general-form').submit();
+		} 
+		return;
+	});
 });

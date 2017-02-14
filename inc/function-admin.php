@@ -17,7 +17,10 @@ function digipen_add_admin_page(){
 
 	add_submenu_page('mark_digipen','Digipen Theme Options','Theme Options','manage_options','mark_digipen_theme','digipen_theme_support_page');
 
+	add_submenu_page('mark_digipen','Digipen Contact Form','Contact Form','manage_options','mark_digipen_theme_contact','digipen_theme_support_page');
+
 	add_submenu_page('mark_digipen','Digipen CSS Options','Custom CSS','manage_options','mark_digipen_css','digipen_theme_settings_page');
+
 
 	//Activate Custom Settings
 	add_action('admin_init', 'digipen_custom_settings');
@@ -26,6 +29,7 @@ function digipen_add_admin_page(){
 add_action('admin_menu', 'digipen_add_admin_page');
 
 function digipen_custom_settings(){
+	//Sidebar Options
 	register_setting('digipen-settings-group','profile_picture');
 	register_setting('digipen-settings-group','first_name');
 	register_setting('digipen-settings-group','last_name');
@@ -48,7 +52,12 @@ function digipen_custom_settings(){
 	add_settings_section('digipen-theme-options', 'Theme Options', 'digipen_theme_options', 'mark_digipen_theme');
 
 	add_settings_field('post-formats', 'Post Formats', 'digipen_post_formats', 'mark_digipen_theme', 'digipen-theme-options');
-}
+
+	//Contact Form Options
+	register_setting('digipen-contact-options', 'activate');
+	add_settings_section('digipen-contact-section', 'Contact Form', 'digipen_contact_section', 'mark_digipen_theme_contact');
+	add_settings_field('activate-form', 'Activate Contact Form', 'digipen_activate_contact', 'mark_digipen_theme_contact', 'digipen-contact-section');
+} 
 
 //Post Formats Callback Function
 function digipen_post_formats_callback( $input ){

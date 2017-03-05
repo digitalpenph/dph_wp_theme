@@ -6,7 +6,23 @@
 			ADMIN PAGE
 	===============================
 */
+//add_menu_page(string $page_title, string $menu_title, string $capability, string $menu_slug, callable $function = '', string $icon_url = '', int $position = null);
 
+//add_submenu_page(string $parent_slug, string $page_title, string $menu_title, string $capability, string $menu_slug, callable $function = '');
+
+//register_setting($option_group, $option_name, $sanitize_callback);
+
+//add_settings_section($id, $title, $callback, $page);
+
+//add_settings_field($id, $title, $callback, $page, $section, $args);
+
+//add_action(string $tag, callable $function_to_add, int $priority = 10, int $accepted_args = 1);
+
+//settings_fields($page, $section);
+
+//do_settings_sections( $page );
+
+//get_option(string $option, mixed $default = false);
 function digipen_add_admin_page(){
 
 	//Generate admin page
@@ -17,9 +33,9 @@ function digipen_add_admin_page(){
 
 	add_submenu_page('mark_digipen','Digipen Theme Options','Theme Options','manage_options','mark_digipen_theme','digipen_theme_support_page');
 
-	add_submenu_page('mark_digipen','Digipen Contact Form','Contact Form','manage_options','mark_digipen_theme_contact','digipen_theme_support_page');
+	add_submenu_page('mark_digipen','Digipen Contact Form','Contact Form','manage_options','mark_digipen_theme_contact','digipen_contact_form_page');
 
-	add_submenu_page('mark_digipen','Digipen CSS Options','Custom CSS','manage_options','mark_digipen_css','digipen_theme_settings_page');
+	add_submenu_page('mark_digipen','Digipen CSS Options','Custom CSS','manage_options','mark_digipen_css','digipen_custom_css_page');
 
 
 	//Activate Custom Settings
@@ -54,10 +70,24 @@ function digipen_custom_settings(){
 	add_settings_field('post-formats', 'Post Formats', 'digipen_post_formats', 'mark_digipen_theme', 'digipen-theme-options');
 
 	//Contact Form Options
-	register_setting('digipen-contact-options', 'activate');
+	register_setting('digipen-contact-options', 'activate_contact');
 	add_settings_section('digipen-contact-section', 'Contact Form', 'digipen_contact_section', 'mark_digipen_theme_contact');
 	add_settings_field('activate-form', 'Activate Contact Form', 'digipen_activate_contact', 'mark_digipen_theme_contact', 'digipen-contact-section');
+	//CUSTOM CSS
+	register_setting('digipen-custom-css-option', 'digipen_css', 'digipen_sanitize_custom_css_handler');
+	add_settings_section('digipen-custom-css-section', 'Custom Css', 'digipen_custom_css_section', 'digipen_custom_css_page');
+	add_settings_field('custom-css', 'Insert Custom Css', 'digipen_custom_css_callback', 'digipen_custom_css_page', 'digipen-custom-css-section');
 } 
+
+function digipen_custom_css_section(){
+	echo 'Lets Create Digipen Custom Css';
+}
+
+function digipen_custom_css_callback(){
+	$css = get_option('digipen_css');
+	$value = (empty($css) ? '/*Digipen Theme Custom Csss*/' : $css);
+	echo '<div id="customCss">'.$value.'</div><textarea id="digipen_css" name="digipen_css" style="display: none; visibility: hidden;">'.$value.'</textarea>';
+}
 
 //Post Formats Callback Function
 function digipen_post_formats_callback( $input ){
@@ -66,6 +96,16 @@ function digipen_post_formats_callback( $input ){
 
 function digipen_theme_options(){
 	echo 'Activate and Deactivate specific Theme Support Options';
+}
+
+function digipen_contact_section(){
+	echo 'Activate and Deactivate Built-in Contact form';
+}
+
+function digipen_activate_contact(){
+	$options = get_option('activate_contact');
+	$checked = (@$options ==1 ? 'checked' : '');
+	echo '<label><input type="checkbox" id="activate_contact" name="activate_contact" value="1" '.$checked.'/></label>';
 }
 
 function digipen_post_formats(){
@@ -128,6 +168,11 @@ function digipen_sanitize_twitter_handler($input){
 	return $output;
 }
 
+function digipen_sanitize_custom_css_handler($input){
+	$output = esc_textarea( $input );
+	return $output;	
+}
+
 //Template submenu functions
 function digipen_theme_create_page(){
 	//generation of admin page
@@ -137,6 +182,15 @@ function digipen_theme_create_page(){
 function digipen_theme_support_page(){
 	require_once(get_template_directory() . '/inc/templates/digipen-theme-support.php');
 }
+
+function digipen_contact_form_page(){
+	require_once(get_template_directory() . '/inc/templates/digipen-contact-form.php');
+}
+
+function digipen_custom_css_page(){
+	require_once(get_template_directory() . '/inc/templates/digipen-custom-css.php');
+}
+
 
 function digipen_theme_settings_page(){
 

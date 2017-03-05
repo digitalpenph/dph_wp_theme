@@ -1,3 +1,8 @@
+<?php
+//settings_fields($page, $section);
+//do_settings_sections( $page );
+//get_option(string $option, mixed $default = false);
+?>
 <h1>Digipen Sidebar Option</h1>
 <?php settings_errors(); ?>
 <?php $firstname = esc_attr( get_option('first_name') ); ?>
